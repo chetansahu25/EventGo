@@ -10,6 +10,6 @@ router.get("/", handleGetUser)
 
 router.post('/signup', handleCreateUser)
 
-router.post('/login', handleUserLogin )
+router.post('/login', express.urlencoded({ extended: true }), handleUserLogin )
 
 module.exports = router;

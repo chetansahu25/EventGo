@@ -5,6 +5,7 @@ const generateToken = require("../utils/generateToken");
 async function handleUserLogin(req, res) {
     const { email, password } = req.body;
 
+
     const dbUser = await User.findOne({ email }).select("+password");
     console.log(dbUser);
     if (!dbUser) {
@@ -19,15 +20,15 @@ async function handleUserLogin(req, res) {
     }
     res.setHeader(
         "Authorization",
-        `Bearer ${generateToken("access", savedUser)}`
+        `Bearer ${generateToken("access", dbUser)}`
     );
-    res.cookie("refreshToken", `${generateToken("refresh", savedUser)}`, {
+    res.cookie("refreshToken", `${generateToken("refresh", dbUser)}`, {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
         maxAge: 30 * 24 * 60 * 60 * 1000, //for 30 Days
     });
-    res.json({
+    res.status(200).json({
         name: dbUser.name,
         message: "Login success",
         success: true
